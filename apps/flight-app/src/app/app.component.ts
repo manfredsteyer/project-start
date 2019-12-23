@@ -1,4 +1,6 @@
 import {Component} from '@angular/core';
+import { OAuthService } from 'angular-oauth2-oidc';
+import { authConfig } from './auth.config';
 
 @Component({
   selector: 'flight-app',
@@ -6,7 +8,10 @@ import {Component} from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  constructor() { 
+  constructor(private oauthService: OAuthService) { 
+    oauthService.configure(authConfig);
+    oauthService.loadDiscoveryDocumentAndTryLogin();
+    oauthService.setupAutomaticSilentRefresh();
   }
 }
 

@@ -1,5 +1,6 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
+import { OAuthService } from 'angular-oauth2-oidc';
 
 @Component({
   selector: 'app-home',
@@ -9,11 +10,15 @@ import {ActivatedRoute} from '@angular/router';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private route: ActivatedRoute) {
+  constructor(
+    private oauthService: OAuthService,
+    private route: ActivatedRoute) {
   }
 
   get userName(): string {
-    return this._userName;
+    const claims = this.oauthService.getIdentityClaims();
+    if (!claims) return null;
+    return claims['given_name'];
   }
 
   expertMode = false;
@@ -33,11 +38,11 @@ export class HomeComponent implements OnInit {
   }
 
   login(): void {
-    this._userName = 'Login will be implemented in another exercise!'
+    this.oauthService.initLoginFlow();
   }
 
   logout(): void {
-    this._userName = '';
+    this.oauthService.logOut();
   }
 
 }
