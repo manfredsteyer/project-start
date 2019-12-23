@@ -13,6 +13,11 @@ import { SidebarComponent } from "./sidebar/sidebar.component";
 import { BookingWizzardFeatureModule } from '@nx-flights/booking/feature-wizzard';
 import { BookingFeatureUpgradeModule } from '@nx-flights/booking/feature-upgrade';
 import { BoardingFeatureModule } from '@nx-flights/boarding/feature';
+import { StoreModule } from '@ngrx/store';
+import { reducers, metaReducers } from './+state';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
+import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
   imports: [
@@ -22,7 +27,16 @@ import { BoardingFeatureModule } from '@nx-flights/boarding/feature';
     BookingFeatureUpgradeModule,
     BrowserAnimationsModule,
     RouterModule.forRoot([...APP_ROUTES], { ...APP_EXTRA_OPTIONS }),
-    BoardingFeatureModule
+    EffectsModule.forRoot([]),
+    BoardingFeatureModule,
+    StoreModule.forRoot(reducers, {
+      metaReducers, 
+      runtimeChecks: {
+        strictStateImmutability: true,
+        strictActionImmutability: true,
+      }
+    }),
+    !environment.production ? StoreDevtoolsModule.instrument() : []
   ],
   declarations: [
     AppComponent,
